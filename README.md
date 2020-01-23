@@ -40,6 +40,7 @@ Sharing data is the most critical challenge in concurrent programming. The progr
   <figcaption>Fig 1. Schematic representation of two processes. a) A process with a single thread. b) A process with three threads. The components of each thread are represented. In each process, threads share data and code.</figcaption>
 </figure>
 
+
 Sharing I/O resources is another important topic in developing concurrent systems. If one thread takes an I/O resource and does not release it, other threads should wait for releasing that resource. This situation can undermine the benefits of concurrency. It may happen at internal states of a thread’s lifecycle, which can go into an infinite loop. A thread, in general, has five states in its lifecycle, including:
 
 - New: a thread is created but not scheduled to run.
@@ -55,11 +56,17 @@ Fig. 2 shows the general lifecycle of a thread. According to this figure, a new 
   <figcaption>Fig 2. A thread lifecycle. The thread starts at the New state and terminates at the Dead state.</figcaption>
 </figure>
 
+
 In this section, so far, I have discussed different aspects of threads. Threading can enhance the speed of computation by using the full potential of the hardware of the system, specifically with multiprocessor CPUs. In applications with a graphical user interface (GUI), threading will help the program to remain responsive. I will discuss such an ap- plication in the Case Study section. With all these and many other advantages of threading, it has excessive complexity in the system design, implement, test, and debug steps. The other disadvantage is data security. A comprehensive plan is required to make sure that data is secured, and no more than one thread has access to data at one time.
 
 In comparing threading and multiprocessing, processes have more overhead than threads as opening, and closing processes take time. On the other hand, sharing data between processes is slower than threads because threads share memory space. Threads can efficiently read and write from the same memory space. There is an overhead associated with launching and maintaining multiple tasks. Studying this is beyond the scope of this study. However, in general, I/O bound operations are good candidates for multithreading, and CPU bound operations are good candidates for multiprocessing.
 
 In all major programming languages, threading and multiprocessing are implemented, and a sufficient amount of modules, packages, and classes are provided to the users to implement concurrency, mostly at mid and high-levels. In the next section, I will study the threading and multiprocessing in Python programming language, which helps to continue the concurrency discussion at a practical level.
+
+### Threading and MultiProcessing in Python
+
+Python is one of the most popular programming languages in developing intelligent systems, prediction models, and data-driven products. In this section, I review different aspects of concurrency in Python.
+
 
 <!-- ![Alt text](images/app_flowchart.png?raw=true "Title") -->
 
