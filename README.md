@@ -37,12 +37,12 @@ Sharing data is the most critical challenge in concurrent programming. The progr
 
 
 <figure class="image">
-  <img src="images/app_flowchart.png" alt="Schematic representation of two processes." style="width: 500px;">
+  <img src="images/thread_vs_process.png" alt="images/thread_vs_process.png" style="width: 200px;">
   <figcaption>Fig 1. Schematic representation of two processes. a) A process with a single thread. b) A process with three threads. The components of each thread are represented. In each process, threads share data and code.</figcaption>
 </figure>
 
 
-![Alt text](images/app_flowchart.png?raw=true "Title")
+<!-- ![Alt text](images/app_flowchart.png?raw=true "Title") -->
 
 ### References
 1) F. Chollet et al., "Keras," https://keras.io, 2015
