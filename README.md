@@ -41,7 +41,7 @@ Sharing data is the most critical challenge in concurrent programming. The progr
 </figure>
 
               
-\\Sharing I/O resources is another important topic in developing concurrent systems. If one thread takes an I/O resource and does not release it, other threads should wait for releasing that resource. This situation can undermine the benefits of concurrency. It may happen at internal states of a thread’s lifecycle, which can go into an infinite loop. A thread, in general, has five states in its lifecycle, including:
+ <br/>Sharing I/O resources is another important topic in developing concurrent systems. If one thread takes an I/O resource and does not release it, other threads should wait for releasing that resource. This situation can undermine the benefits of concurrency. It may happen at internal states of a thread’s lifecycle, which can go into an infinite loop. A thread, in general, has five states in its lifecycle, including:
 
 - New: a thread is created but not scheduled to run.
 - Runnable: the thread is scheduled to run.
@@ -57,7 +57,7 @@ Fig. 2 shows the general lifecycle of a thread. According to this figure, a new 
 </figure>
 
               
-\\In this section, so far, I have discussed different aspects of threads. Threading can enhance the speed of computation by using the full potential of the hardware of the system, specifically with multiprocessor CPUs. In applications with a graphical user interface (GUI), threading will help the program to remain responsive. I will discuss such an ap- plication in the Case Study section. With all these and many other advantages of threading, it has excessive complexity in the system design, implement, test, and debug steps. The other disadvantage is data security. A comprehensive plan is required to make sure that data is secured, and no more than one thread has access to data at one time.
+ <br/>In this section, so far, I have discussed different aspects of threads. Threading can enhance the speed of computation by using the full potential of the hardware of the system, specifically with multiprocessor CPUs. In applications with a graphical user interface (GUI), threading will help the program to remain responsive. I will discuss such an ap- plication in the Case Study section. With all these and many other advantages of threading, it has excessive complexity in the system design, implement, test, and debug steps. The other disadvantage is data security. A comprehensive plan is required to make sure that data is secured, and no more than one thread has access to data at one time.
 
 In comparing threading and multiprocessing, processes have more overhead than threads as opening, and closing processes take time. On the other hand, sharing data between processes is slower than threads because threads share memory space. Threads can efficiently read and write from the same memory space. There is an overhead associated with launching and maintaining multiple tasks. Studying this is beyond the scope of this study. However, in general, I/O bound operations are good candidates for multithreading, and CPU bound operations are good candidates for multiprocessing.
 
@@ -136,6 +136,11 @@ Event-driven programming is an area of programming that concurrency plays a vita
   <figcaption>Fig 3. A flowchart of event-driven application</figcaption>
 </figure>
 
+ <br/> In this study, I develop an event-driven application to represent the effect of concurrency at I/O and CPU bounded tasks. In the next section, I will discuss the application in detail.
+
+### **IV. Case Study: Live Data Streaming**
+
+So far, an overview of concurrency is discussed, and different levels of concurrency based on threading and processing are presented. In this section, I present the concurrency in practice. A typical Intelligent System or a prediction model can have three main parts. First, it requires some data; as a result, there should be at least one source of incoming data; second, the system requires to process the incoming data and produce some results or decisions, third, the system should present the results. I develope an application for live data streaming. The application includes the following tasks:
 
 ### References
 1) F. Chollet et al., "Keras," https://keras.io, 2015
