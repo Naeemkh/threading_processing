@@ -159,14 +159,14 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
  <br/>This application is event-driven, and I developed a GUI for it. Fig. 5 shows the first window of the application. According to Fig. 5, there are three control boxes. The first control box, which is the Camera Capturing Controller, initiates a camera object. Pushing the start button in this controller opens an instance of a webcam (see Fig. 6). The second box is the frame recoding controller, which starts storing frames in the database. The third box is the computational power controller, which conducts intensive computation. In this study, instead of an actual machine learning model, without losing generality, I implemented a task that is able to put a significant workload on all CPUs to test the multiprocessing tasks. I tested the application on a Mac system with eight physical and 16 logical CPU cores. This application is written using the Pyside2 package [10]. Pyside2 is the Python API for the Qt package, which is vastly used for developing GUIs. The image processing section is implemented using the OpenCV package [12].
 
  <figure class="image">
-  <img src="images/app_flowchart.png" alt="images/main_window.png" width="400">
+  <img src="images/main_window.png" alt="images/main_window.png" width="400">
   <figcaption>Fig 5. Main window of the developed application. Three main controllers are distributed vertically. Read the text for more details. The application detects the number of physiscal and logical CPU cores, which in this test is 16 (). Activating ```Enable Threading``` will use threading in the application. </figcaption>
 </figure>
 
  <br/>
 
   <figure class="image">
-  <img src="images/app_flowchart.png" alt="images/figure_6.png" width="400">
+  <img src="images/figure_6.png" alt="images/figure_6.png" width="400">
   <figcaption>Fig 6. Instance of output object. OpenCV package is used to convert webacam input into a presentable output. See the text for more details.</figcaption>
 </figure>
 
