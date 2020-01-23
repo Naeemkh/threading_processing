@@ -3,12 +3,13 @@ An example of live data streaming
 Author: Naeem Khoshnevis
 
 Description:
-These tutorials were helpful in crafting this app:
 
+These tutorials were very helpful in crafting this app:
 https://stackoverflow.com/questions/41103148/capture-webcam-video-using-pyqt
 https://doc.qt.io/qt-5/qimage.html
 https://www.codingforentrepreneurs.com/blog/open-cv-python-change-video-resolution-or-scale
- 
+https://nrsyed.com/2018/07/05/multithreading-with-opencv-python-to-improve-video-processing-performance/
+
 """
 
 import os
@@ -16,26 +17,32 @@ import sys
 import cv2
 import multiprocessing
 
-from PySide2.QtWidgets import (QApplication, QWidget, 
-                               QPushButton, QCheckBox, QGroupBox,QLabel,
-                               QGridLayout, QVBoxLayout)
+
+from PySide2.QtWidgets import (QApplication, QWidget,
+                               QPushButton, QLabel, QDialog, QFileDialog, QCheckBox,
+                               QVBoxLayout, QGroupBox, QHBoxLayout, QGridLayout)
+
+from PySide2.QtCore import Signal, Slot, QThread
+from PySide2.QtGui import QImage, QPixmap
 
 
-from PySide2.QtCore import Signal, Slot
-
+import folder as fl
 import camera_window as cw
+import cpu_power as cpup
 
 
 class FirstWindow(QWidget):
     """
     Class for the main window
     """
+    
     def __init__(self,camera_number):
         super().__init__()
 
         self.capture = None
         self.title = "Live Data Streaming" 
         self.video_frame = None
+        self.foldername_vtext = ""
         self.camera_number = camera_number
         self.initialize()  
 
@@ -43,7 +50,7 @@ class FirstWindow(QWidget):
     def initialize(self):        
         """Intialize the main window"""        
         self.setWindowTitle(self.title)
-        self.setGeometry(100,100,100,200)
+        self.setGeometry(100,100,200,100)
 
         grid = QGridLayout()
         grid.addWidget(self.create_camera_group(),0,0)
@@ -103,37 +110,16 @@ class FirstWindow(QWidget):
 
         return self.groupbox2    
 
-    def image_labeling_group(self):
-
-        self.groupbox3 = QGroupBox("Image Labeling Controller")
-        self.button5 = QPushButton("Start Labeling Window", self)
-        self.button5.clicked.connect(self.start_labeling_images)
-        self.button6 = QPushButton("Choose Source Directory", self)
-        self.button6.clicked.connect(self.choose_source_directory)
-        self.button7 = QPushButton("Choose Target Directory", self)
-        self.button7.clicked.connect(self.choose_target_directory)
-        self.source_directory_l = QLabel("",self)
-        self.target_directory_l = QLabel("",self)
-
-        gridbox3 = QGridLayout()
-        gridbox3.addWidget(self.button6,0,0)
-        gridbox3.addWidget(self.source_directory_l,0,1,1,2)
-        gridbox3.addWidget(self.button7,1,0)
-        gridbox3.addWidget(self.target_directory_l,1,1,1,2)
-        gridbox3.addWidget(self.button5,2,0)
-        self.groupbox3.setLayout(gridbox3)
-
-        return self.groupbox3
 
     def available_resources_group(self):
 
-        self.groupbox4 = QGroupBox("Computational Power Controller",self)
+        self.groupbox4 = QGroupBox("Computational Power",self)
         
         gridbox = QGridLayout()
         self.available_cpu = QLabel("Number of CPUs: ",self)
         self.available_cpu_v = QLabel(str(multiprocessing.cpu_count()),self)
         
-        self.test_cpu = QPushButton("Load CPU(s)",self)
+        self.test_cpu = QPushButton("Test CPU",self)
         self.test_cpu.clicked.connect(self.test_cpu_power)
 
         self.enable_multi_thread = QCheckBox(" Enable Threading", self)
@@ -156,32 +142,36 @@ class FirstWindow(QWidget):
         self.video_frame.start()
         self.video_frame.show()
 
-
     def stop_recording(self):
-        print("Recording Stopped.")   
-        self.video_frame.timer.stop()            
+        self.video_frame.timer.stop()               
 
     def close_recording(self):
         print("Closing video frame window ... ")
         self.video_frame.cap.release()
         self.video_frame.close()
 
-
     def create_new_folder(self):
-        pass
-
+        self.create_folder = fl.CreateFolder(self)
+        self.make_connection_with_folder(self.create_folder)
 
     def start_saving_frames(self):
-        pass
+        if not self.video_frame:
+            print("First start recording!")
+        elif not self.foldername_vtext:
+            print("First Create a Folder")
+        else:
+            self.video_frame.is_saving_frames = True
+            self.video_frame.saving_folder = self.foldername_vtext
+            self.video_frame.capture_frame_rate_for_record = self.capture_frame_rate_for_record
    
     def stop_saving_frames(self):
-        pass
+        self.video_frame.is_saving_frames = False
 
     def test_cpu_power(self):
-        pass 
+        self.cpu_power = cpup.TestCPU(self.enable_multi_thread.isChecked())
 
     def make_connection_with_folder(self, other):
-        pass
+        other.foldersignal.connect(self.update_new_folder_params)
 
     @Slot(str,int)
     def update_new_folder_params(self,fname,frate):
@@ -189,7 +179,6 @@ class FirstWindow(QWidget):
         self.capture_frame_rate_for_record = frate
         self.foldername_v.setText(fname)
         self.capture_frame_rate_v.setText(str(frate))
-
 
 if __name__ == "__main__":
 
