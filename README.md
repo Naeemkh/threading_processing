@@ -41,7 +41,7 @@ Sharing data is the most critical challenge in concurrent programming. The progr
 </figure>
 
               
-Sharing I/O resources is another important topic in developing concurrent systems. If one thread takes an I/O resource and does not release it, other threads should wait for releasing that resource. This situation can undermine the benefits of concurrency. It may happen at internal states of a thread’s lifecycle, which can go into an infinite loop. A thread, in general, has five states in its lifecycle, including:
+\\Sharing I/O resources is another important topic in developing concurrent systems. If one thread takes an I/O resource and does not release it, other threads should wait for releasing that resource. This situation can undermine the benefits of concurrency. It may happen at internal states of a thread’s lifecycle, which can go into an infinite loop. A thread, in general, has five states in its lifecycle, including:
 
 - New: a thread is created but not scheduled to run.
 - Runnable: the thread is scheduled to run.
@@ -57,7 +57,7 @@ Fig. 2 shows the general lifecycle of a thread. According to this figure, a new 
 </figure>
 
               
-In this section, so far, I have discussed different aspects of threads. Threading can enhance the speed of computation by using the full potential of the hardware of the system, specifically with multiprocessor CPUs. In applications with a graphical user interface (GUI), threading will help the program to remain responsive. I will discuss such an ap- plication in the Case Study section. With all these and many other advantages of threading, it has excessive complexity in the system design, implement, test, and debug steps. The other disadvantage is data security. A comprehensive plan is required to make sure that data is secured, and no more than one thread has access to data at one time.
+\\In this section, so far, I have discussed different aspects of threads. Threading can enhance the speed of computation by using the full potential of the hardware of the system, specifically with multiprocessor CPUs. In applications with a graphical user interface (GUI), threading will help the program to remain responsive. I will discuss such an ap- plication in the Case Study section. With all these and many other advantages of threading, it has excessive complexity in the system design, implement, test, and debug steps. The other disadvantage is data security. A comprehensive plan is required to make sure that data is secured, and no more than one thread has access to data at one time.
 
 In comparing threading and multiprocessing, processes have more overhead than threads as opening, and closing processes take time. On the other hand, sharing data between processes is slower than threads because threads share memory space. Threads can efficiently read and write from the same memory space. There is an overhead associated with launching and maintaining multiple tasks. Studying this is beyond the scope of this study. However, in general, I/O bound operations are good candidates for multithreading, and CPU bound operations are good candidates for multiprocessing.
 
@@ -127,6 +127,14 @@ The last module is Concurrency, which is one of the recent modules added to Pyth
 This is very important if we develop an application with a large number of tasks. The thread pool has a fixed number of threads, which is set by the programmer. If a thread in a thread pool completes its execution, then the thread can be reused. However, for any reason, if the thread is terminated and leave from the pool, a new thread will be generated and will be replaced by that thread. See [9] for more details.
 I discussed an overview of threading in Python and presented a simple example of creating and terminating a thread. However, concurrency is a very comprehensive concept. It has many details in software design, synchronization, intercommunication, testing, and debugging, among many other topics. Interested readers can see [3] for more details. To narrow the discussion, in the next section, I discuss the event-driven programming, which is directly related to this project’s case study.
 
+**C.** Event Driven Programming
+
+Event-driven programming is an area of programming that concurrency plays a vital role. In this type of programming, the flow of the program depends upon events. The program’s event loop always listening for upcoming events and act accordingly. A good example of event-driven programming is applications with graphical user interfaces. Depending on the application, the user can request different tasks. These tasks can be I/O operations or intensive CPU computations. The main thread keeps the event loop responsive and delegates other tasks to new threads or, at some point, new processes. Fig. 3 shows a diagram for event-driven programming. As long as the system is not shut down or crashed, the request/response loop is running.
+
+<figure class="image">
+  <img src="images/event_driven.png" alt="images/event_driven.png" width="250">
+  <figcaption>Fig 3. A flowchart of event-driven application</figcaption>
+</figure>
 
 
 ### References
