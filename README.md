@@ -73,6 +73,52 @@ Python executes programs by interpreting program instructions or bytecodes. Pyth
 To some extent, the statement is accurate, and Python is not a capable multithreading programming language. However, that is not the case in many applications. Python programs are mostly wrappers around many low-level packages. The GIL is only concerned with Python bytecode execution. As a result, any thread-safe extension that uses many CPU cores will release the GIL as long as it does not need to interact with Python runtime. This is also the case with I/O operations. Discussing the mechanism of the GIL in detail is beyond the scope of this study. In summary, we can say the GIL is a mechanism to make Python a thread-safe programming language; however, it comes with restrictions.        
 Each thread that possesses the GIL is required to release it after a predetermined time. After Python 3.2, this time has been set to 5 milliseconds(ms), which relatively improved the responsiveness of the threads. During the runtime, after each 5 ms, the thread who has the GIL releases it. Other threads, including the thread who released the GIL, compete to acquire the GIL. A thread (based on priorities) acquires the GIL and run the program. If any I/O operation happens before 5 ms, the GIL will be released. The threads which do not have the GIL will run I/O operations (probably waiting for data from network), or conducting CPU bound computations (e.g., using numpy for matrix multiplication). If the results need to get back to the program, upon getting the results, these threads will compete again to acquire the GIL. Based on the applications of machine learning, intelligent systems, and data-driven products, the GIL is not a problem toward getting the full potential from hardware [3]. It is worth to mention that the GIL only a topic for CPython, which is the reference implementation of the Python programming language written in C and Python [8]. Other versions of Python implementation (e.g., Jython and IronPython, which are implemented in the Java platform and .net framework) does not use the GIL for thread safe mechanism. They perform intelligent thread scheduling, which can be a topic for another study.
 
+**B.** Implementing Threading
+
+There are three major modules in Python to implement concurrency, including:
+
+- Threading
+- Multiprocessing
+- Concurrency
+
+In Threading, every thread is considered as an object of the Threading class. It provides high-level support for threads. There are several methods to control the thread lifecycle. The most common methods include:
+
+- run()
+- start()
+- join()
+
+The run() method includes the functions to run with threading. The start() starts the thread by calling the run method, and the join() waits for the thread to terminate. In the following,  I present an example of starting and running a thread using the threading module. In this example, I started thread 1; however, I call the join() method before starting other threads. It means we need to wait to get the result of that thread and terminate it then move to other threads. Since for thread number 2-4, I did not call the join() method, after starting the thread number 2, the GIL is released, and thread number 3 created, and again the GIL is released, and thread number 4 is created. After one second of sleep, each thread competes to acquire the GIL and run the rest of its function, which is ”Thread x finishing.” The racing of each thread to acquire the GIL can be tested in several repetitions of the example. One can see that the finishing message can be out of order.
+
+```python
+from threading import Thread as th
+import time
+
+def run(name):
+    print(f"Thread {name} starting ...")
+    time.sleep(1)
+    print(f"Thread {name} finishing.")
+
+t1 = th(target=run, args=(1,))
+t2 = th(target=run, args=(2,))
+t3 = th(target=run, args=(3,))
+t4 = th(target=run, args=(4,))
+t1.start()
+t1.join()
+t2.start()
+t3.start()
+t4.start()
+
+Output:
+
+Thread 1 starting ...
+Thread 1 finishing.
+Thread 2 starting ...
+Thread 3 starting ...
+Thread 4 starting ...
+Thread 2 finishing.
+Thread 3 finishing.
+Thread 4 finishing.
+```
 
 
 <!-- ![Alt text](images/app_flowchart.png?raw=true "Title") -->
