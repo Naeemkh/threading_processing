@@ -120,8 +120,14 @@ Thread 3 finishing.
 Thread 4 finishing.
 ```
 
+Multiprocessing, on the other hand, is a module to use two or more CPU units within a single or multiple computer systems. It is the best approach to get the full potential from the system’s hardware by utilizing the full number of CPU cores available in the system. Multiprocessing makes parallel computing possible. An example of multiprocessing is similar to threading; however, instead of Thread, one needs to use the Process class. Similar to threading, multiprocessing has start() and join() methods, among other methods, to control the processes.
 
-<!-- ![Alt text](images/app_flowchart.png?raw=true "Title") -->
+The last module is Concurrency, which is one of the recent modules added to Python (added after Python 3.2) to provide a high-level concurrency. The idea is creating a pool of idle threads or processors and assign computational work to them. If the application requires a higher number of threads, assigning tasks manually can be error-prone and computationally expensive and can cause performance issues. To overcome this issue, and to reuse available threads, a thread and processors pools are defined. One can consider a thread pool as a group of idle threads that are ready to be assigned a new task. By reusing available threads, the thread pool considerably reduces the overhead by creating new threads.
+
+This is very important if we develop an application with a large number of tasks. The thread pool has a fixed number of threads, which is set by the programmer. If a thread in a thread pool completes its execution, then the thread can be reused. However, for any reason, if the thread is terminated and leave from the pool, a new thread will be generated and will be replaced by that thread. See [9] for more details.
+I discussed an overview of threading in Python and presented a simple example of creating and terminating a thread. However, concurrency is a very comprehensive concept. It has many details in software design, synchronization, intercommunication, testing, and debugging, among many other topics. Interested readers can see [3] for more details. To narrow the discussion, in the next section, I discuss the event-driven programming, which is directly related to this project’s case study.
+
+
 
 ### References
 1) F. Chollet et al., "Keras," https://keras.io, 2015
@@ -132,3 +138,4 @@ Thread 4 finishing.
 6) M. Hammond, “Pep 311: Simplified global interpreter lock acquisition for extensions,” ”https://www.python.org/dev/peps/pep-0311/”, 2003.
 7) E. Snow, “Pep 554: Multiple interpreters in the stdlib,” ”https://www.python.org/dev/peps/pep-0554/”, 2017. 
 8) https://github.com/python/cpython
+9) “The python standard library: Concurrent execution,” ”https://docs.python.org/3/library/concurrent.futures.html”, 2019.
