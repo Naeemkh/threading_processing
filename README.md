@@ -3,7 +3,7 @@
 
 ## Written by: Naeem Khoshnevis
 
-### Introduction 
+### **I. Introduction** 
 Application of machine learning, specifically deep learning algorithms in scientific research and solving business problems, has gained substantial interest during the recent years. Sensors for data acquisition are cheaper and more accurate than before. Small research groups or businesses have the possibility of storing a large amount of data, and high-performance computing resources are more accessible than before. As a result, intensive data-driven studies have become a significant part of many research fields and businesses. These studies require handling significantly large datasets, and also, they demand intensive computation. Such studies with different steps in input data, preprocessing, analysis, prediction model training, post-processing, output data, as well as updating models, are good candidates for implementing and studying the concept of concurrency.
 A typical data-driven system or practical prediction model can have three main parts: 
 
@@ -16,7 +16,7 @@ A brief review of the published codes and papers indicates that concurrency is m
 Because modern computers are equipped with multiple CPU cores, as a result, harnessing available computational resources can improve the performance of the data-driven systems and speed up the intensive computational processes. In this study, I present a practical overview of concurrency. First, I present an overview of concurrency in general, then I continue with more technical details on the implementation of concurrency in Python. I develop a live data streaming system with different computational features, and I apply concurrency at different levels. I use the Python programming language as a study platform and different processing packages.
 The study shows that concurrency significantly improves the performance of the system, and in many cases, keeps the system responsive for incoming data. It should be considered as one of the crucial steps of developing any data-driven system and product to harness the computational resources in the system effectively.
 
-### Concurrency
+### **II. Concurrency**
 
 Concurrency is defined as the ability to conduct several computations at the same time or the ability to run different parts of code out of order in an overlapping period instead of executing in sequential order. In practice, concurrency is managing the available shared resources (CPU and Memory) among different programs [2]. In many cases, concurrency is confused with parallelism. Parallelism is utilizing different CPU cores and using mostly the same code on different data. Parallelism is the ability to split the tasks into subtasks that can be processed at the same time.
 
@@ -40,7 +40,7 @@ Sharing data is the most critical challenge in concurrent programming. The progr
   <figcaption>Fig 1. Schematic representation of two processes. a) A process with a single thread. b) A process with three threads. The components of each thread are represented. In each process, threads share data and code.</figcaption>
 </figure>
 
-
+              
 Sharing I/O resources is another important topic in developing concurrent systems. If one thread takes an I/O resource and does not release it, other threads should wait for releasing that resource. This situation can undermine the benefits of concurrency. It may happen at internal states of a thread’s lifecycle, which can go into an infinite loop. A thread, in general, has five states in its lifecycle, including:
 
 - New: a thread is created but not scheduled to run.
@@ -56,16 +56,23 @@ Fig. 2 shows the general lifecycle of a thread. According to this figure, a new 
   <figcaption>Fig 2. A thread lifecycle. The thread starts at the New state and terminates at the Dead state.</figcaption>
 </figure>
 
-
+              
 In this section, so far, I have discussed different aspects of threads. Threading can enhance the speed of computation by using the full potential of the hardware of the system, specifically with multiprocessor CPUs. In applications with a graphical user interface (GUI), threading will help the program to remain responsive. I will discuss such an ap- plication in the Case Study section. With all these and many other advantages of threading, it has excessive complexity in the system design, implement, test, and debug steps. The other disadvantage is data security. A comprehensive plan is required to make sure that data is secured, and no more than one thread has access to data at one time.
 
 In comparing threading and multiprocessing, processes have more overhead than threads as opening, and closing processes take time. On the other hand, sharing data between processes is slower than threads because threads share memory space. Threads can efficiently read and write from the same memory space. There is an overhead associated with launching and maintaining multiple tasks. Studying this is beyond the scope of this study. However, in general, I/O bound operations are good candidates for multithreading, and CPU bound operations are good candidates for multiprocessing.
 
 In all major programming languages, threading and multiprocessing are implemented, and a sufficient amount of modules, packages, and classes are provided to the users to implement concurrency, mostly at mid and high-levels. In the next section, I will study the threading and multiprocessing in Python programming language, which helps to continue the concurrency discussion at a practical level.
 
-### Threading and MultiProcessing in Python
+### **III. Threading and MultiProcessing in Python**
 
 Python is one of the most popular programming languages in developing intelligent systems, prediction models, and data-driven products. In this section, I review different aspects of concurrency in Python.
+
+**A.** Global Interpreter Lock 
+
+Python executes programs by interpreting program instructions or bytecodes. Python is not a thread-safe programming language; as a result, only one thread at a time can execute the program’s instruction. The Global Interpreter Lock (GIL) is defined to prevent more than one thread at a time to execute the code. The GIL is a mutex that allows only one thread to hold control of the Python interpreter [5]. There are numerous discussions about the GIL; each year, many researchers and developers suggest improvements on the GIL. These proposals are called Python Enhancement Proposals (e.g., see [6] and [7]). The GIL is a single lock that prevents multiple threads from executing Python code concurrently. Although the GIL makes sure that all instructions are executed in a thread-safe environment, it seems an unpleasant feature that can significantly reduce the Python code performance during an execution.      
+To some extent, the statement is accurate, and Python is not a capable multithreading programming language. However, that is not the case in many applications. Python programs are mostly wrappers around many low-level packages. The GIL is only concerned with Python bytecode execution. As a result, any thread-safe extension that uses many CPU cores will release the GIL as long as it does not need to interact with Python runtime. This is also the case with I/O operations. Discussing the mechanism of the GIL in detail is beyond the scope of this study. In summary, we can say the GIL is a mechanism to make Python a thread-safe programming language; however, it comes with restrictions.        
+Each thread that possesses the GIL is required to release it after a predetermined time. After Python 3.2, this time has been set to 5 milliseconds(ms), which relatively improved the responsiveness of the threads. During the runtime, after each 5 ms, the thread who has the GIL releases it. Other threads, including the thread who released the GIL, compete to acquire the GIL. A thread (based on priorities) acquires the GIL and run the program. If any I/O operation happens before 5 ms, the GIL will be released. The threads which do not have the GIL will run I/O operations (probably waiting for data from network), or conducting CPU bound computations (e.g., using numpy for matrix multiplication). If the results need to get back to the program, upon getting the results, these threads will compete again to acquire the GIL. Based on the applications of machine learning, intelligent systems, and data-driven products, the GIL is not a problem toward getting the full potential from hardware [3]. It is worth to mention that the GIL only a topic for CPython, which is the reference implementation of the Python programming language written in C and Python [8]. Other versions of Python implementation (e.g., Jython and IronPython, which are implemented in the Java platform and .net framework) does not use the GIL for thread safe mechanism. They perform intelligent thread scheduling, which can be a topic for another study.
+
 
 
 <!-- ![Alt text](images/app_flowchart.png?raw=true "Title") -->
@@ -75,3 +82,7 @@ Python is one of the most popular programming languages in developing intelligen
 2) A. S. Tanenbaum and M. Van Steen, Distributed systems: principles and paradigms. Prentice-Hall, 2007. 
 3) M. Summerfield, Python in practice: create better programs using concurrency, libraries, and patterns. Addison-Wesley, 2013.
 4) https://www.tutorialspoint.com/concurrency_in_python/concurrency_in_python_threads.htm
+5) "Thread state and the global iterpreter lock," "https://docs.python.org/3/c-api/init.html", 2019
+6) M. Hammond, “Pep 311: Simplified global interpreter lock acquisition for extensions,” ”https://www.python.org/dev/peps/pep-0311/”, 2003.
+7) E. Snow, “Pep 554: Multiple interpreters in the stdlib,” ”https://www.python.org/dev/peps/pep-0554/”, 2017. 
+8) https://github.com/python/cpython
