@@ -3,10 +3,17 @@ An example of live data streaming
 Author: Naeem Khoshnevis
 
 Description:
+These tutorials were helpful in crafting this app:
+
+https://stackoverflow.com/questions/41103148/capture-webcam-video-using-pyqt
+https://doc.qt.io/qt-5/qimage.html
+https://www.codingforentrepreneurs.com/blog/open-cv-python-change-video-resolution-or-scale
  
 """
 
+import os
 import sys
+import cv2
 import multiprocessing
 
 from PySide2.QtWidgets import (QApplication, QWidget, 
@@ -16,17 +23,20 @@ from PySide2.QtWidgets import (QApplication, QWidget,
 
 from PySide2.QtCore import Signal, Slot
 
+import camera_window as cw
+
 
 class FirstWindow(QWidget):
     """
     Class for the main window
     """
-    def __init__(self):
+    def __init__(self,camera_number):
         super().__init__()
 
         self.capture = None
         self.title = "Live Data Streaming" 
         self.video_frame = None
+        self.camera_number = camera_number
         self.initialize()  
 
 
@@ -141,13 +151,20 @@ class FirstWindow(QWidget):
 
     def start_recording(self):
         print("Recording started ... ")
+        if not self.video_frame:
+            self.video_frame = cw.CamWindow(self.camera_number) 
+        self.video_frame.start()
+        self.video_frame.show()
 
 
     def stop_recording(self):
-        print("Recording Stopped.")              
+        print("Recording Stopped.")   
+        self.video_frame.timer.stop()            
 
     def close_recording(self):
         print("Closing video frame window ... ")
+        self.video_frame.cap.release()
+        self.video_frame.close()
 
 
     def create_new_folder(self):
@@ -177,5 +194,5 @@ class FirstWindow(QWidget):
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
-    win = FirstWindow()
+    win = FirstWindow(0)
     sys.exit(app.exec_())
