@@ -156,7 +156,21 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
   <figcaption>Fig 4. A flowchart for the data-driven application of this study. The Main Event window is presented in Fig. 5. </figcaption>
 </figure>
 
+ <br/>This application is event-driven, and I developed a GUI for it. Fig. 5 shows the first window of the application. According to Fig. 5, there are three control boxes. The first control box, which is the Camera Capturing Controller, initiates a camera object. Pushing the start button in this controller opens an instance of a webcam (see Fig. 6). The second box is the frame recoding controller, which starts storing frames in the database. The third box is the computational power controller, which conducts intensive computation. In this study, instead of an actual machine learning model, without losing generality, I implemented a task that is able to put a significant workload on all CPUs to test the multiprocessing tasks. I tested the application on a Mac system with eight physical and 16 logical CPU cores. This application is written using the Pyside2 package [10]. Pyside2 is the Python API for the Qt package, which is vastly used for developing GUIs. The image processing section is implemented using the OpenCV package [12].
+
+ <figure class="image">
+  <img src="images/app_flowchart.png" alt="images/main_window.png" width="400">
+  <figcaption>Fig 5. Main window of the developed application. Three main controllers are distributed vertically. Read the text for more details. The application detects the number of physiscal and logical CPU cores, which in this test is 16 (). Activating ```Enable Threading``` will use threading in the application. </figcaption>
+</figure>
+
  <br/>
+
+  <figure class="image">
+  <img src="images/app_flowchart.png" alt="images/figure_6.png" width="400">
+  <figcaption>Fig 6. Instance of output object. OpenCV package is used to convert webacam input into a presentable output. See the text for more details.</figcaption>
+</figure>
+
+ <br/>If I do not choose the multithreading checkbox (see Fig. 5 for reference), the application does not use threading. As a result, upon defining a new intensive task, the main application’s main window freezes. The image storing process stops, and the video capturing and presenting freeze until the intensive computation terminates. After finishing the computation, everything returns to normal. This example represents the importance of concurrency in practical application. With providing a new thread for recording, storing images, and a thread to start the CPU bound application, we keep the application responsive.PySide2 has its multithreading classes to generate new threads and manage them. Please read [my other post](https://www.linkedin.com/pulse/qt-python-sending-notifications-dashboard-naeem-khoshnevis/) on [LinkedIn](https://www.linkedin.com/in/datahacker/) for a simple example about threading. 
 
 
 
@@ -170,3 +184,5 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
 7) E. Snow, “Pep 554: Multiple interpreters in the stdlib,” ”https://www.python.org/dev/peps/pep-0554/”, 2017. 
 8) https://github.com/python/cpython
 9) “The python standard library: Concurrent execution,” ”https://docs.python.org/3/library/concurrent.futures.html”, 2019.
+10) https://www.qt.io/qt-for-python
+11) G. Bradski, "The OpenCV Library," Dr. Dobb's Journal of Software Tools, 2000. 
