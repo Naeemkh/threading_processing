@@ -116,7 +116,7 @@ class FirstWindow(QWidget):
         self.groupbox4 = QGroupBox("Computational Power",self)
         
         gridbox = QGridLayout()
-        self.available_cpu = QLabel("Number of CPUs: ",self)
+        self.available_cpu = QLabel("Number of CPU cores: ",self)
         self.available_cpu_v = QLabel(str(multiprocessing.cpu_count()),self)
         
         self.test_cpu = QPushButton("Test CPU",self)

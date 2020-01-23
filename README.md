@@ -138,6 +138,16 @@ Event-driven programming is an area of programming that concurrency plays a vita
 
  <br/> In this study, I develop an event-driven application to represent the effect of concurrency at I/O and CPU bounded tasks. In the next section, I will discuss the application in detail.
 
+ **D. Concurrency with Qt**
+This application is written using the Pyside2 package [10], which is the Python API for the Qt package and is vastly used for developing GUIs. Qt package provides a set of threading classes. Although it is possible to use Python’s thread or multiprocessing approaches within any Qt application, it is highly recommended to use Qt interfaces for running jobs in other threads, which also implemented in PySide2. There are three classes in the Qt for efficient implementing concurrency in PyQt applications, these classes include:
+
+- QThread
+- QThreadPool
+- QRunnable
+
+QThread object manages one thread of control within the program. QThread begins executing in the run() method. By default, run starts the event loop by calling the exec() method and runs the Qt-event loop inside the thread. QThread has several methods to create and manage a thread. Setting priority and stack size, as well as requests for the interruption, are some of the advanced features [11]. QThreadPool manages and recycles individual QThread objects to help reduce thread creation costs in programs that use threads. Each Qt application has one global QThreadPool object [Qthread-Pool-14]. QThreadPool handles queuing and execution of workers. QRunnable class is the base class for all runnable objects and is an interface for representing a task or piece of code that needs to be executed [Qrunnable-15]. In order to execute a function in another thread, we need to create an instance of QRunnable class and pass it to the QThreadPool instance. Communication with threads (the thread I/O) is another important topic in developing concurrent event-driven applications. In this study, I have not implemented it; however, it is worth to discuss.
+In many cases, we need to know the state of the running workers and their data. For example, we are interested in raised exceptions, results of computations, the progress of computations, among others. Qt provides signals and slots framework to setup such communications. Signals emit values, and Slots pick up the values. The link between, signals and emit are built through the connect() method. Although in this project, I used signals and emits for different windows and buttons communications, I have not implemented them for thread communications. See [14] for more details.
+
 ### **IV. Case Study: Live Data Streaming**
 
 So far, an overview of concurrency is discussed, and different levels of concurrency based on threading and processing are presented. In this section, I present the concurrency in practice. A typical Intelligent System or a prediction model can have three main parts. First, it requires some data; as a result, there should be at least one source of incoming data; second, the system requires to process the incoming data and produce some results or decisions, third, the system should present the results. I develope an application for live data streaming. The application includes the following tasks:
@@ -156,25 +166,41 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
   <figcaption>Fig 4. A flowchart for the data-driven application of this study. The Main Event window is presented in Fig. 5. </figcaption>
 </figure>
 
- <br/>This application is event-driven, and I developed a GUI for it. Fig. 5 shows the first window of the application. According to Fig. 5, there are three control boxes. The first control box, which is the Camera Capturing Controller, initiates a camera object. Pushing the start button in this controller opens an instance of a webcam (see Fig. 6). The second box is the frame recoding controller, which starts storing frames in the database. The third box is the computational power controller, which conducts intensive computation. In this study, instead of an actual machine learning model, without losing generality, I implemented a task that is able to put a significant workload on all CPUs to test the multiprocessing tasks. I tested the application on a Mac system with eight physical and 16 logical CPU cores. This application is written using the Pyside2 package [10]. Pyside2 is the Python API for the Qt package, which is vastly used for developing GUIs. The image processing section is implemented using the OpenCV package [12].
-
+ <br/>This application is event-driven, and I developed a GUI for it. Fig. 5 shows the first window of the application. According to Fig. 5, there are three control boxes. 
+ 
  <figure class="image">
   <img src="images/main_window.png" alt="images/main_window.png" width="400">
-  <figcaption>Fig 5. Main window of the developed application. Three main controllers are distributed vertically. Read the text for more details. The application detects the number of physiscal and logical CPU cores, which in this test is 16 (). Activating `Enable Threading` will use threading in the application. </figcaption>
+  <figcaption>Fig 5. Main window of the developed application. Three main controllers are distributed vertically. Read the text for more details. The application detects the number of physiscal and logical CPU cores, which in this test is 16 (iMac (Retina 5K, 27-inch, 2019), 3.6 GHz Intel Core i9). Activating *Enable Threading* will use threading in the application. </figcaption>
 </figure>
 
- <br/>       
-
+ <br/> The first control box, which is the Camera Capturing Controller, initiates a camera object. Pushing the start button in this controller opens an instance of a webcam (see Fig. 6). 
+ 
   <figure class="image">
   <img src="images/figure_6.png" alt="images/figure_6.png" width="400">
   <figcaption>Fig 6. Instance of output object. OpenCV package is used to convert webacam input into a presentable output. See the text for more details.</figcaption>
 </figure>
 
- <br/>If I do not choose the multithreading checkbox (see Fig. 5 for reference), the application does not use threading. As a result, upon defining a new intensive task, the main application’s main window freezes. The image storing process stops, and the video capturing and presenting freeze until the intensive computation terminates. After finishing the computation, everything returns to normal. This example represents the importance of concurrency in practical application. With providing a new thread for recording, storing images, and a thread to start the CPU bound application, we keep the application responsive.PySide2 has its multithreading classes to generate new threads and manage them. Please read [my other post](https://www.linkedin.com/pulse/qt-python-sending-notifications-dashboard-naeem-khoshnevis/) on [LinkedIn](https://www.linkedin.com/in/datahacker/) for a simple example about threading. 
+ <br/> The second box is the frame recoding controller, which starts storing frames in the database. The third box is the computational power controller, which conducts intensive computation. In this study, instead of an actual machine learning model, without losing generality, I implemented a task that is able to put a significant workload on all CPUs to test the multiprocessing tasks. Pushing *Test CPU* button in this controller will open the *Multiprocessing Computation* window, which is shown in Fig. 7.  
+ 
+<figure class="image">
+  <img src="images/figure_7.png" alt="images/figure_6.png" width="400">
+  <figcaption>Fig 7. A widget for putting workload on CPU cores. This is a synthetic simulation to replicate the actual CPU usage. In non-threaded approach, any CPU tests freezes the application.</figcaption>
+</figure>
+
+ <br/>
+
+The image processing section of the application is implemented using the OpenCV package [15]. If I do not choose the multithreading checkbox (see Fig. 5 for reference), the application does not use threading. As a result, upon defining a new intensive task, the main application’s main window freezes. The image storing process stops, and the video capturing and presenting freeze until the intensive computation terminates. After finishing the computation, everything returns to normal. This example represents the importance of concurrency in practical application. With providing a new thread the CPU bound application, we keep the application responsive. PySide2 has its multithreading classes to generate new threads and manage them. Please read [my other post](https://www.linkedin.com/pulse/qt-python-sending-notifications-dashboard-naeem-khoshnevis/) on [LinkedIn](https://www.linkedin.com/in/datahacker/) for a simple example about threading. For harnessing all CPU cores, I start a new thread and through that thread, I conduct a multiprocessing analysis. In that case, the main thread is not blocked, the GIL is released, and the applicaiton is responsive.  
+
+The following video is a demo of the application.
+
+
+[![See Demo On YouTube!](https://img.youtube.com/vi/aYKP-1L92PI/0.jpg)](https://www.youtube.com/watch?v=aYKP-1L92PI&feature=emb_logo)
 
 
 
-### References
+</br>            
+
+### **References**
 1) F. Chollet et al., "Keras," https://keras.io, 2015
 2) A. S. Tanenbaum and M. Van Steen, Distributed systems: principles and paradigms. Prentice-Hall, 2007. 
 3) M. Summerfield, Python in practice: create better programs using concurrency, libraries, and patterns. Addison-Wesley, 2013.
@@ -185,4 +211,11 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
 8) https://github.com/python/cpython
 9) “The python standard library: Concurrent execution,” ”https://docs.python.org/3/library/concurrent.futures.html”, 2019.
 10) https://www.qt.io/qt-for-python
-11) G. Bradski, "The OpenCV Library," Dr. Dobb's Journal of Software Tools, 2000. 
+11) QtGroup, “QThread Class,” 2019. [Online]. Available: https://doc.qt.io/qt-5/qthread.html
+12) QtGroup, “QThreadPool Class,” 2019. [Online]. Available: https://doc.qt.io/qt-5/qthreadpool.html
+13) QtGroup, “QRunnable Class,” 2019. [Online]. Available: https://doc.qt.io/qt-5/qrunnable.html
+14) M. Fitzpatrick, “Multithreading PyQt applications with QThreadPool,” 2019. [Online]. Available: available at https://www.learnpyqt.com
+15) G. Bradski, "The OpenCV Library," Dr. Dobb's Journal of Software Tools, 2000. 
+
+# 
+<p style="text-align: center;"> Copyright &copy; 2020 Naeem Khoshnevis </p>

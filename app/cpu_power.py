@@ -20,7 +20,7 @@ class TestCPU(QWidget):
     def initialize(self):
         
         self.setGeometry(200,200,400,400)
-        self.setWindowTitle("CPU Test")
+        self.setWindowTitle("Multiprocessing Computation")
         
         vbox = QVBoxLayout()
         
