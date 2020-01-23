@@ -2,3 +2,4 @@
 ### Case Study:  Live Data Streaming
 
 ![alt text](https://raw.githubusercontent.com/naeemkh/threading_processing/images/app_flowchart.png)
+![Alt text](images/app_flowchart.png?raw=true "Title")
