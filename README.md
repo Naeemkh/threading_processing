@@ -160,10 +160,10 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
 
  <figure class="image">
   <img src="images/main_window.png" alt="images/main_window.png" width="400">
-  <figcaption>Fig 5. Main window of the developed application. Three main controllers are distributed vertically. Read the text for more details. The application detects the number of physiscal and logical CPU cores, which in this test is 16 (). Activating ```Enable Threading``` will use threading in the application. </figcaption>
+  <figcaption>Fig 5. Main window of the developed application. Three main controllers are distributed vertically. Read the text for more details. The application detects the number of physiscal and logical CPU cores, which in this test is 16 (). Activating `Enable Threading` will use threading in the application. </figcaption>
 </figure>
 
- <br/>
+ <br/>       
 
   <figure class="image">
   <img src="images/figure_6.png" alt="images/figure_6.png" width="400">
