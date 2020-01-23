@@ -142,6 +142,24 @@ Event-driven programming is an area of programming that concurrency plays a vita
 
 So far, an overview of concurrency is discussed, and different levels of concurrency based on threading and processing are presented. In this section, I present the concurrency in practice. A typical Intelligent System or a prediction model can have three main parts. First, it requires some data; as a result, there should be at least one source of incoming data; second, the system requires to process the incoming data and produce some results or decisions, third, the system should present the results. I develope an application for live data streaming. The application includes the following tasks:
 
+- Capturing video
+- Processing frames
+- Storing frames
+- Intensive computations (e.g., training a prediction model based on) new data
+- Presenting the recorded video
+- lightweight processes (e.g., annotating the video with the desired target values)
+
+Fig. 4 shows the case study application flowchart. This is a typical machine learning or data product system. There is ongoing data streaming, which in this study is video capturing. The application conduct lightweight processes on the incoming data (e.g., set frame rate, create a frame, resize, change color, and so on). There is an option implemented to store the captured frame on the database. Also, the captured video is displayed, which can be annotated based on the input and the prediction model. The application also requires resources to conduct intensive computations, which can be training the prediction models. This system is a typical candidate for concurrency.
+
+<figure class="image">
+  <img src="images/app_flowchart.png" alt="images/app_flowchart.png" width="400">
+  <figcaption>Fig 4. A flowchart for the data-driven application of this study. The Main Event window is presented in Fig. 5. </figcaption>
+</figure>
+
+ <br/>
+
+
+
 ### References
 1) F. Chollet et al., "Keras," https://keras.io, 2015
 2) A. S. Tanenbaum and M. Van Steen, Distributed systems: principles and paradigms. Prentice-Hall, 2007. 
