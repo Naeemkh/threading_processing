@@ -191,7 +191,7 @@ Fig. 4 shows the case study application flowchart. This is a typical machine lea
 The following video is a demo of the application.
 
 
-[![See Demo On YouTube!](https://img.youtube.com/vi/aYKP-1L92PI/0.jpg)](https://www.youtube.com/watch?v=aYKP-1L92PI&feature=emb_logo)
+[![See Demo On YouTube!](https://img.youtube.com/vi/bb-FeB8gjnY/0.jpg)](https://https://www.youtube.com/watch?v=bb-FeB8gjnY)
 
 
 
